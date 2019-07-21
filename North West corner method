@@ -1,0 +1,153 @@
+//C program for demonstrate North West Corner Method(NWCM)
+
+#include<stdio.h>
+void northwest(float costMatrix[4][3], float supply[4], float demand[3], float final[10][10], int row, int col)
+{
+    int i,j,r = 0,c = 0;
+    float cost = 0;
+    while(demand[col-1]!=0)
+    {
+        if(demand!=0)
+        {
+            //if demand is less than supply
+            if(demand<supply[r])
+            {
+                final[r] = demand;
+                 
+                ///subtract demand from supply
+                supply[r] = supply[r]-demand;
+                 
+                //after allocating make demand = 0
+                demand=0;
+                if(c==col-1)
+                    c=0;
+                else
+                    c++;
+            }
+            else
+            {
+               //if supply is less than demand
+               
+                if(demand>supply[r])
+                {
+                    final[r]=supply[r];
+                     
+                    //subtract supply from demand
+                    demand-=supply[r];
+                    
+                    //after allocating make supply = 0
+                    supply[r]=0;
+                    if(r==row-1)
+                        r=0;
+                    else
+                        r++;
+                         
+                }
+                 
+                else
+                {
+                    //this is the case where demand and supply are same
+                    //then allocate either supply or demand
+                    final[r]=supply[r];
+                     
+                    //after allocating make demand and supply both = 0
+                    demand=0;
+                    supply[r]=0;
+                    if(c==col-1)
+                        c=0;
+                    else
+                        c++;
+                    if(r==row-1)
+                        r=0;
+                    else
+                        r++;
+                }
+            }
+        }
+        else
+        {
+            if(c==col-1)
+                c=0;
+            else
+                c++;
+        }
+    }
+       
+      //diplsying final Transportation matrix  
+      printf("\n\nFinal Transportation matrix or initial feasible solution is \n");
+      for(r=0;r<row;r++)
+         {
+            for(c=0;c<col;c++)
+            {
+                printf("\t%0.2f",final[r]);
+            }
+         printf("\n");
+        }
+         
+        //calculatoing cost 
+        //(2*5) + (3*2) + (3*6) + (4*3) + (7*4) + (2*14) = 102
+        for(r=0;r<row;r++)
+         {
+            for(c=0;c<col;c++)
+            {
+                cost += costMatrix[r]*final[r];
+            }
+        }
+      printf("\nMinimum Transportation cost : %.2f",cost);
+}
+ 
+int main()
+{
+    int i,j,row=4,col=3;
+     
+    //initialize cost matrix
+    float costMatrix[4][3]=
+    {
+        {2, 7, 4},
+        {3, 3, 1},
+        {5, 4, 7},
+        {1, 6, 2}
+    };
+     
+    //initialize supplies and demands 
+    float supply[4] = {5, 8, 7, 14};
+    float demand[3] = {7, 9, 18};
+     
+    //take a matrix final
+    //for storing the final Transportation matrix
+    float final[10][10];
+ 
+    //at first sotring 0 in all the cell of final matrix
+    for(i=0;i<10;i++)
+    {
+        for(j=0;j<10;j++)
+        {
+            final[i][j]=0;
+        }
+    }
+     
+    //diplsying the cost matrix 
+    printf("The Transportation Problem \n");
+    for(i=0;i<row;i++)
+         {
+            for(j=0;j<col;j++)
+            {
+                printf("\t%.2f",costMatrix[i][j]);
+            }
+         printf("\n");
+        }
+    printf("\nSupply : ");
+    for(i=0;i<4;i++)
+    {
+        printf("%.1f  ",supply[i]);
+    }
+     
+    printf("\nDemand : ");
+    for(i=0;i<3;i++)
+    {
+        printf("%.1f  ",demand[i]);
+    }
+    //call northwest() method    
+    //passing the costMatrix,supply,demand and no of row, column
+    northwest(costMatrix, supply, demand, final, row, col);
+}
